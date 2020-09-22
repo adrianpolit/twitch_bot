@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests
 import json
+import requests
 from bs4 import BeautifulSoup
 from flask import Flask
+from flask_debug import Debug
+from flask import request
 
 # CONSTANTS
 MOTH_URL = "https://rocketleague.tracker.network/rocket-league/profile/steam/xmothsnok/overview"
@@ -12,13 +14,18 @@ BASE_URL_STEAM = "https://rocketleague.tracker.network/rocket-league/profile/ste
 BASE_URL_XBOX = "https://rocketleague.tracker.network/rocket-league/profile/xbl/"
 BASE_URL_PSN = "https://rocketleague.tracker.network/rocket-league/profile/psn/"
 URL_END = "/overview"
-app = Flask(__name__)
 champ_icon = "🏆"
 diamond_icon = "💎"
 platinum_icon = "⭐"
 gold_icon = "💛"
 silver_icon = "⚪"
 bronze_icon = "💩"
+
+app = Flask(__name__)
+
+
+# Debug(app)
+# app.run(debug=True)
 
 
 # Route for Moth
@@ -30,8 +37,11 @@ def get_default_info():
 
 # Route for rank finder
 # In bot: !rankfinder {platform} {username}
-@app.route('/<platform>/<username>')
-def get_info_by_user(platform, username):
+@app.route('/finder')
+def get_info_by_user():
+    platform = request.args.get('platform')
+    username = request.args.get('user')
+    print('Got request to find ' + username + ' on ' + platform)
     url = find_url_by_platform(platform, username)
 
     return get_response_data(url)
@@ -41,11 +51,26 @@ def find_url_by_platform(platform, username):
     if 'xbox' in platform.lower():
         url = BASE_URL_XBOX + username + URL_END
     elif 'steam' in platform.lower() or 'pc' in platform.lower():
-        # TODO implement
-        url = BASE_URL_STEAM + username + URL_END
+        url = get_steam_id64(username)
     else:
         url = BASE_URL_PSN + username + URL_END
     return url
+
+
+def get_steam_id64(username):
+    if 'https' in username:
+        username += '?xml=1'
+        xml = requests.get(username).content
+        if not xml:
+            raise Exception('Not a valid url')
+        soup = BeautifulSoup(xml, features="lxml")
+        steam_id = soup.find('profile').find('steamid64').string
+        return BASE_URL_STEAM + steam_id + URL_END
+
+    if len(username) == 17 and username.isnumeric():
+        return BASE_URL_STEAM + username + URL_END
+
+    raise Exception('Not a valid user')
 
 
 def get_response_data(url):
@@ -53,7 +78,7 @@ def get_response_data(url):
     profile_list = list(json_dict["stats-v2"]["standardProfiles"])[0]  # Agnostic profile name
     rank_values_list = retrieve_values(json_dict, profile_list)
     if len(rank_values_list) == 0:
-        return "Data wasn't found for default user"
+        return "Data wasn't found for user"
     single_string_info = ""
     for rank_info in rank_values_list:
         single_string_info += rank_info + "\n"
@@ -91,7 +116,7 @@ def get_string_of_values(metadata, value, player_name):
     rank_division = value["stats"]["division"]["metadata"]["name"]
     mmr = str(value["stats"]["rating"]["value"])
     return player_name + "'s " + playlist_name + \
-           ": " + rank_name + " " + rank_icon + "(" + rank_division + ") MMR: " + mmr
+        ": " + rank_name + " " + rank_icon + "(" + rank_division + ") MMR: " + mmr
 
 
 def get_rank_icon(rank_name):
