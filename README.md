@@ -12,7 +12,7 @@ This app is powered (indirectly) by [Tracker Network](https://tracker.gg/) from 
 I'm eager to see their full API for their Rocket League data, but thus far, it's still in development, so I only had this option.
 
 
-##Set up
+### Set up
 You will need [Flask](https://flask.palletsprojects.com/en/1.1.x/installation/), and [Python3](https://www.python.org/downloads/)
 
 With pip you may install the rest of the dependencies:
@@ -22,7 +22,7 @@ With pip you may install the rest of the dependencies:
 
 
 ## How to use it
-You can download the code and execute it in your own machine, as I'm doing myself.
+You can download the code and execute it in your own machine using Flask, as I'm doing myself.
 
 I'm looking into some options to host this **and make it a full-online-accessible API** (if Tracker gives me the OK 😜)
 
