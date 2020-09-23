@@ -13,13 +13,14 @@ MOTH_URL = "https://rocketleague.tracker.network/rocket-league/profile/steam/xmo
 BASE_URL_STEAM = "https://rocketleague.tracker.network/rocket-league/profile/steam/"
 BASE_URL_XBOX = "https://rocketleague.tracker.network/rocket-league/profile/xbl/"
 BASE_URL_PSN = "https://rocketleague.tracker.network/rocket-league/profile/psn/"
-URL_END = "/overview"
-champ_icon = "🏆"
-diamond_icon = "💎"
-platinum_icon = "⭐"
-gold_icon = "💛"
-silver_icon = "⚪"
-bronze_icon = "💩"
+URL_END_TRACKER = "/overview"
+CHAMP_ICON = "🏆"
+DIAMOND_ICON = "💎"
+PLATINUM_ICON = "⭐"
+GOLD_ICON = "💛"
+SILVER_ICON = "⚪"
+BRONZE_ICON = "💩"
+UNRANKED_ICON = "❌"
 
 app = Flask(__name__)
 
@@ -49,11 +50,11 @@ def get_info_by_user():
 
 def find_url_by_platform(platform, username):
     if 'xbox' in platform.lower():
-        url = BASE_URL_XBOX + username + URL_END
+        url = BASE_URL_XBOX + username + URL_END_TRACKER
     elif 'steam' in platform.lower() or 'pc' in platform.lower():
         url = get_steam_id64(username)
     else:
-        url = BASE_URL_PSN + username + URL_END
+        url = BASE_URL_PSN + username + URL_END_TRACKER
     return url
 
 
@@ -65,10 +66,10 @@ def get_steam_id64(username):
             raise Exception('Not a valid url')
         soup = BeautifulSoup(xml, features="lxml")
         steam_id = soup.find('profile').find('steamid64').string
-        return BASE_URL_STEAM + steam_id + URL_END
+        return BASE_URL_STEAM + steam_id + URL_END_TRACKER
 
     if len(username) == 17 and username.isnumeric():
-        return BASE_URL_STEAM + username + URL_END
+        return BASE_URL_STEAM + username + URL_END_TRACKER
 
     raise Exception('Not a valid user')
 
@@ -105,7 +106,8 @@ def retrieve_values(json_dict, profile_list):
                     or "Ranked Doubles 2v2" in metadata.values():
                 temp_list.append(get_string_of_values(metadata, value, player_name))
         return temp_list
-    except:
+    except Exception as e:  # TODO too broad exception handler
+        print('Failed to retrieve values' + str(e))
         return []
 
 
@@ -116,7 +118,7 @@ def get_string_of_values(metadata, value, player_name):
     rank_division = value["stats"]["division"]["metadata"]["name"]
     mmr = str(value["stats"]["rating"]["value"])
     return player_name + "'s " + playlist_name + \
-        ": " + rank_name + " " + rank_icon + "(" + rank_division + ") MMR: " + mmr
+           ": " + rank_name + " " + rank_icon + "(" + rank_division + ") MMR: " + mmr
 
 
 def get_rank_icon(rank_name):
@@ -132,3 +134,5 @@ def get_rank_icon(rank_name):
         return silver_icon
     if "Bronze" in rank_name:
         return bronze_icon
+    if "Unranked" in rank_name:
+        return UNRANKED_ICON
