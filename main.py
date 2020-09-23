@@ -123,16 +123,16 @@ def get_string_of_values(metadata, value, player_name):
 
 def get_rank_icon(rank_name):
     if "Champion" in rank_name:
-        return champ_icon
+        return CHAMP_ICON
     if "Diamond" in rank_name:
-        return diamond_icon
+        return DIAMOND_ICON
     if "Platinum" in rank_name:
-        return platinum_icon
+        return PLATINUM_ICON
     if "Gold" in rank_name:
-        return gold_icon
+        return GOLD_ICON
     if "Silver" in rank_name:
-        return silver_icon
+        return SILVER_ICON
     if "Bronze" in rank_name:
-        return bronze_icon
+        return BRONZE_ICON
     if "Unranked" in rank_name:
         return UNRANKED_ICON
