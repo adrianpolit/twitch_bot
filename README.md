@@ -8,7 +8,8 @@ The app works for Xbox, PSN and Steam.
 
 ### How does it work?
 
-This app is powered (indirectly) by [Tracker Network](https://tracker.gg/) from where I get the data via web-scrapping (sorry Tracker don't hate me)
+This app is powered (indirectly) by [Tracker Network](https://tracker.gg/) from where I get the data via web-scrapping (sorry Tracker don't hate me).
+
 I'm eager to see their full API for their Rocket League data, but thus far, it's still in development, so I only had this option.
 
 
