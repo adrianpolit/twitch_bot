@@ -17,9 +17,9 @@ URL_END_TRACKER = "/overview"
 CHAMP_ICON = "🏆"
 DIAMOND_ICON = "💎"
 PLATINUM_ICON = "⭐"
-GOLD_ICON = "💛"
-SILVER_ICON = "⚪"
-BRONZE_ICON = "💩"
+GOLD_ICON = "🥇"
+SILVER_ICON = "🥈"
+BRONZE_ICON = "🥉"
 UNRANKED_ICON = "❌"
 
 app = Flask(__name__)
