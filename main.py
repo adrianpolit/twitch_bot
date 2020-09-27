@@ -64,7 +64,7 @@ def get_steam_id64(username):
         xml = requests.get(username).content
         if not xml:
             raise Exception('Not a valid url')
-        soup = BeautifulSoup(xml, features="lxml")
+        soup = BeautifulSoup(xml, "html.parser")
         steam_id = soup.find('profile').find('steamid64').string
         return BASE_URL_STEAM + steam_id + URL_END_TRACKER
 
@@ -88,7 +88,7 @@ def get_response_data(url):
 
 def get_json_dict(url):
     response = requests.get(url)
-    soup = BeautifulSoup(response.content, features="lxml")
+    soup = BeautifulSoup(response.content, "html.parser")
     script_text = str(soup.find_all("script")[3].string)
     script_text = script_text[:script_text.find("};") + 1].replace("window.__INITIAL_STATE__=", "")
 
