@@ -20,7 +20,7 @@ With pip you may install the rest of the dependencies:
 
 - [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 - [Python Requests](https://requests.readthedocs.io/en/master/)
-
+- [LXML](https://lxml.de/index.html#download)
 
 ## How to use it
 You can download the code and execute it in your own machine using Flask, as I'm doing myself.
